@@ -1,14 +1,24 @@
 package com.example.rollercoastertycoon.model
 
-data class Attraction(
-    val id: Double,
-    val name: String,
-    val category: String,
-    val capacity: Int,
-    val yearBuilt: Int,
-    val image: String,
-    val onRideVideo: String?,
-    val operational: Boolean,
-    val maintenanceDates: List<String>,
-    val additionalAttributes: Map<String, Any>
-)
+import jakarta.persistence.*
+
+
+@Entity
+@Table(name = "attractions")
+ class Attraction(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0,
+    var name: String,
+    var category: String,
+    var capacity: Int,
+    var yearBuilt: Int,
+    var image: String,
+    var onRideVideo: String?,
+    var operational: Boolean,
+    @ElementCollection
+    @CollectionTable(name = "maintenance_dates", joinColumns = [JoinColumn(name = "attraction_id")])
+    @Column(name = "maintenance_date")
+    var maintenanceDates: List<String> = ArrayList(),
+    var speed: Int,
+    var heightRequirement: String?
+ )
