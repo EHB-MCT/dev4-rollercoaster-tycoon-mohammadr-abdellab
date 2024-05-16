@@ -12,6 +12,7 @@ class UserService(private val userRepository: UserRepository) {
             username = userDTO.username,
             email = userDTO.email,
             password = userDTO.password,
+            role =  userDTO.role,
         )
         return userRepository.save(user)
     }
