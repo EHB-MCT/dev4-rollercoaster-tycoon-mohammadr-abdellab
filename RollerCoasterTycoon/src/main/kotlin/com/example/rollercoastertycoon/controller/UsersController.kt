@@ -16,7 +16,7 @@ class UserController(private val userService: UserService) {
     @PostMapping("/register")
     fun registerUser(@RequestBody userDTO: UserDTO): ResponseEntity<UserDTO> {
         val user = userService.registerUser(userDTO)
-        return ResponseEntity.ok(UserDTO(user.id, user.username, user.email, user.password))
+        return ResponseEntity.ok(UserDTO(user.id, user.username, user.email, user.password, user.role))
     }
 
     @GetMapping("/{id}")
@@ -30,6 +30,15 @@ class UserController(private val userService: UserService) {
     fun getAllUsers(): ResponseEntity<List<User>> {
         val users = userService.getAllUsers()
         return ResponseEntity.ok(users)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteUser(@PathVariable id: Long): ResponseEntity<String> {
+        return if (userService.deleteUserById(id)) {
+            ResponseEntity("User deleted successfully", HttpStatus.OK)
+        } else {
+            ResponseEntity("User not found", HttpStatus.NOT_FOUND)
+        }
     }
 
 }
