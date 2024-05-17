@@ -10,5 +10,12 @@ data class User(
     val username: String,
     val email: String,
     val password: String,
-    var role: String
+    var role: String,
+    @ManyToMany
+    @JoinTable(
+    name = "user_favorites",
+    joinColumns = [JoinColumn(name = "user_id")],
+    inverseJoinColumns = [JoinColumn(name = "attraction_id")]
     )
+    val favorites: MutableList<Attraction> = mutableListOf()
+)
