@@ -1,9 +1,11 @@
 package com.example.rollercoastertycoon.dto
 
 data class UserDTO(
-    val id: Long = 0,
-    val username: String,
-    val email: String,
-    val password: String,
-    val role: String
+    var id: Long = 0,
+    var username: String,
+    var email: String,
+    var password: String,
+    var role: String,
+    var favorites: List<Long> = listOf()
     )
+
