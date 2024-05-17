@@ -1,6 +1,7 @@
 package com.example.rollercoastertycoon.controller
 
 import com.example.rollercoastertycoon.dto.UserDTO
+import com.example.rollercoastertycoon.model.Attraction
 import com.example.rollercoastertycoon.model.User
 import com.example.rollercoastertycoon.service.UserService
 import org.springframework.http.HttpStatus
@@ -17,6 +18,15 @@ class UserController(private val userService: UserService) {
     fun registerUser(@RequestBody userDTO: UserDTO): ResponseEntity<UserDTO> {
         val user = userService.registerUser(userDTO)
         return ResponseEntity.ok(UserDTO(user.id, user.username, user.email, user.password, user.role))
+    }
+    data class LoginRequest(
+        val email: String,
+        val password: String
+    )
+    @PostMapping("/login")
+    fun loginUser(@RequestBody request: LoginRequest): ResponseEntity<User> {
+        val user = userService.authenticateUser(request.email, request.password)
+        return ResponseEntity.ok(user)
     }
 
     @GetMapping("/{id}")
@@ -40,6 +50,25 @@ class UserController(private val userService: UserService) {
             ResponseEntity("User not found", HttpStatus.NOT_FOUND)
         }
     }
+
+    @PostMapping("/{userId}/favorites/{attractionId}")
+    fun addFavoriteAttraction(@PathVariable userId: Long, @PathVariable attractionId: Long): ResponseEntity<User> {
+        val user = userService.addFavoriteAttraction(userId, attractionId)
+        return ResponseEntity.ok(user)
+    }
+
+    @GetMapping("/{userId}/favorites")
+    fun getFavoriteAttractions(@PathVariable userId: Long): ResponseEntity<List<Attraction>> {
+        val favorites = userService.getFavoriteAttractions(userId)
+        return ResponseEntity.ok(favorites)
+    }
+
+    @DeleteMapping("/{userId}/favorites/{attractionId}")
+    fun removeFavoriteAttraction(@PathVariable userId: Long, @PathVariable attractionId: Long): ResponseEntity<User> {
+        val user = userService.removeFavoriteAttraction(userId, attractionId)
+        return ResponseEntity.ok(user)
+    }
+
 
 }
 
