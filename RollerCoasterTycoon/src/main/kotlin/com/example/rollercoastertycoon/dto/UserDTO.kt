@@ -8,3 +8,4 @@ data class UserDTO(
     var role: String,
     var favorites: List<Long> = listOf()
     )
+
