@@ -11,7 +11,7 @@ import jakarta.persistence.*
     var name: String,
     @ManyToOne
     @JoinColumn(name = "category_id")
-    val category: Category,
+    var category: Category,
     var capacity: Int,
     var yearBuilt: Int,
     var image: String,
