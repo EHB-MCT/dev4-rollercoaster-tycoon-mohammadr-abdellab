@@ -9,7 +9,9 @@ import jakarta.persistence.*
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var name: String,
-    var category: String,
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    val category: Category,
     var capacity: Int,
     var yearBuilt: Int,
     var image: String,
