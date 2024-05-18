@@ -11,7 +11,6 @@ class AttractionService(private val attractionRepository: AttractionRepository) 
         return attractionRepository.findAll()
     }
 
-
     fun getAttractionById(id: Long): Attraction {
         return attractionRepository.findById(id).orElseThrow { NoSuchElementException("Attraction not found") }
     }
