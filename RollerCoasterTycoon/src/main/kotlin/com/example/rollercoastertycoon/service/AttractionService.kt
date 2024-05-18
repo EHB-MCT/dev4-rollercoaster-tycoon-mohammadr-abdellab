@@ -2,10 +2,12 @@ package com.example.rollercoastertycoon.service
 import com.example.rollercoastertycoon.repositories.AttractionRepository
 import com.example.rollercoastertycoon.dto.AttractionDTO
 import com.example.rollercoastertycoon.model.Attraction
+import com.example.rollercoastertycoon.model.Category
+import com.example.rollercoastertycoon.repositories.CategoryRepository
 import org.springframework.stereotype.Service
 
 @Service
-class AttractionService(private val attractionRepository: AttractionRepository) {
+class AttractionService(private val attractionRepository: AttractionRepository, private val categoryRepository: CategoryRepository) {
 
     fun getAllAttractions(): List<Attraction> {
         return attractionRepository.findAll()
@@ -16,9 +18,11 @@ class AttractionService(private val attractionRepository: AttractionRepository) 
     }
 
     fun addAttraction(attractionDTO: AttractionDTO): Attraction {
+        val category = categoryRepository.findByName(attractionDTO.category)
+            ?: throw IllegalArgumentException("Category not found: ${attractionDTO.category}")
         val attraction = Attraction(
             name = attractionDTO.name,
-            category = attractionDTO.category,
+            category = category,
             capacity = attractionDTO.capacity,
             yearBuilt = attractionDTO.yearBuilt,
             image = attractionDTO.image,
@@ -35,8 +39,10 @@ class AttractionService(private val attractionRepository: AttractionRepository) 
         val existingAttraction = attractionRepository.findById(id)
         if (existingAttraction.isPresent) {
             val attraction = existingAttraction.get()
+            val category = categoryRepository.findByName(attractionDTO.category)
+                ?: throw IllegalArgumentException("Category not found: ${attractionDTO.category}")
             attraction.name = attractionDTO.name
-            attraction.category = attractionDTO.category
+            attraction.category = category
             attraction.capacity = attractionDTO.capacity
             attraction.yearBuilt = attractionDTO.yearBuilt
             attraction.image = attractionDTO.image
