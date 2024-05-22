@@ -2,7 +2,17 @@
   <div class="container">
     <h1 class="text-center my-4">Attractions</h1>
     <div class="row">
-      <div class="col-md-3" v-for="attraction in attractions" :key="attraction.id">
+      <div class="col-md-1">
+        <div class="list-group">
+          <a href="#" class="list-group-item list-group-item-action" :class="{ active: selectedCategory === null }"
+            @click="filterByCategory(null)">All</a>
+          <a href="#" v-for="category in categories" :key="category.id" class="list-group-item list-group-item-action"
+            :class="{ active: selectedCategory === category.id }" @click="filterByCategory(category.id)">
+            {{ category.name }}
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3" v-for="attraction in filteredAttractions" :key="attraction.id">
         <div class="card mb-3" style="width: 100%; height: 40pc;">
           <img class="card-img-top" style="height: 15pc; object-fit: cover;" :src="attraction.image"
             alt="Image of {{ attraction.name }}">
@@ -46,16 +56,42 @@ export default {
   name: "AttractionsView",
   data() {
     return {
-      attractions: []
+      attractions: [],
+      categories: [],
+      selectedCategory: null,
+      favorites: []
     };
+  },
+  computed: {
+    filteredAttractions() {
+      if (this.selectedCategory === null) {
+        return this.attractions;
+      }
+      return this.attractions.filter(attraction => attraction.category.id === this.selectedCategory);
+    }
   },
   async created() {
     try {
       const response = await axios.get("http://localhost:9000/attractions/all");
       this.attractions = response.data;
+      const categoriesResponse = await axios.get("http://localhost:9000/categories");
+      this.categories = categoriesResponse.data;
 
     } catch (error) {
-      console.error("Error fetching attractions:", error);
+      console.error("Error fetching data:", error);
+    }
+  },
+  methods: {
+    filterByCategory(categoryId) {
+      this.selectedCategory = categoryId;
+    },
+    addToFavorites(attraction) {
+      if (!this.favorites.some(fav => fav.id === attraction.id)) {
+        this.favorites.push(attraction);
+        alert(`${attraction.name} added to favorites!`);
+      } else {
+        alert(`${attraction.name} is already in favorites!`);
+      }
     }
   }
 };

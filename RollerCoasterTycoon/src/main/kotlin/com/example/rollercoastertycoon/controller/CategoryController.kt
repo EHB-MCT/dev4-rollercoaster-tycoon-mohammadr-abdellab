@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.http.HttpStatus
 
+
+@CrossOrigin
 @RestController
 @RequestMapping("/categories")
 class CategoryController(private val categoryService: CategoryService) {
