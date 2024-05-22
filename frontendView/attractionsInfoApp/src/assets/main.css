@@ -1,2 +1,20 @@
 @import './base.css';
 @import 'bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+.bi-heart:hover {
+    transform: scale(1.2);
+  }
+
+.bi-heart {
+    transition: transform 0.2s;
+    font-size:30px;
+    cursor: pointer;
+  }
+  .bi-heart-fill:hover {
+    transform: scale(1.2);
+  }
+.bi-heart-fill{
+    transition: transform 0.2s;
+    cursor: pointer;
+  }

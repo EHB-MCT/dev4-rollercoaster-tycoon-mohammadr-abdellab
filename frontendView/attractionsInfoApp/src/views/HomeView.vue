@@ -35,15 +35,26 @@
             <a :href="attraction.onRideVideo || '#'" class="btn btn-primary mt-2" target="_blank">Watch On-Ride
               Video</a>
             <br>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart"
-              viewBox="0 0 16 16">
-              <path style="width: 1px;"
-                d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
-            </svg><button class="btn btn-info mt-2" @click="addToFavorites(attraction)">Add to Favorites</button>
-
+            <button v-if="!favorites.some(fav => fav.id === attraction.id)" class="btn mt-2"
+              @click="addToFavorites(attraction)" style="border: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" cursor="pointer" width="30" height="30" fill="red"
+                class="bi bi-heart" viewBox="0 0 16 16">
+                <path style=""
+                  d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+              </svg>
+            </button>
+            <button v-else class="btn mt-2" @click="addToFavorites(attraction)" style="border: none;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-heart-fill"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div v-if="message" class="alert alert-info" role="alert">
+      {{ message }}
     </div>
   </div>
 </template>
@@ -59,7 +70,8 @@ export default {
       attractions: [],
       categories: [],
       selectedCategory: null,
-      favorites: []
+      favorites: [],
+      message: ""
     };
   },
   computed: {
@@ -85,14 +97,44 @@ export default {
     filterByCategory(categoryId) {
       this.selectedCategory = categoryId;
     },
-    addToFavorites(attraction) {
-      if (!this.favorites.some(fav => fav.id === attraction.id)) {
-        this.favorites.push(attraction);
-        alert(`${attraction.name} added to favorites!`);
-      } else {
-        alert(`${attraction.name} is already in favorites!`);
+    async getFavorites() {
+      try {
+        const user = JSON.parse(localStorage.getItem('loggedInUser'));
+        const userId = user.id;
+        const response = await axios.get(`http://localhost:9000/users/${userId}/favorites`);
+        this.favorites = response.data;
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+      }
+    },
+    async addToFavorites(attraction) {
+      const user = JSON.parse(localStorage.getItem('loggedInUser'));
+      const userId = user.id;
+      const attractionId = attraction.id;
+      try {
+        if (!this.favorites.some(fav => fav.id === attraction.id)) {
+          // Ajouter l'attraction aux favoris
+          await axios.post(`http://localhost:9000/users/${userId}/favorites/${attractionId}`);
+          this.favorites.push(attraction);
+          alert(`${attraction.name} added to favorites!`);
+          this.message = `${attraction.name} added to favorites!`;
+
+        } else {
+          // Supprimer l'attraction des favoris si elle est déjà présente
+          const existingFavoriteIndex = this.favorites.findIndex(fav => fav.id === attraction.id);
+          await axios.delete(`http://localhost:9000/users/${userId}/favorites/${attractionId}`);
+          this.favorites.splice(existingFavoriteIndex, 1);
+          alert(`${attraction.name} retiré des favoris!`);
+          this.message = "Removed from favorite list!";
+        }
+      } catch (error) {
+        console.error("Error toggling favorites:", error);
       }
     }
+
+  },
+  mounted() {
+    this.getFavorites();
   }
 };
 </script>
