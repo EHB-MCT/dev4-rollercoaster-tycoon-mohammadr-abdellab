@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.*
 class UserController(private val userService: UserService) {
 
     @PostMapping("/register")
-    fun registerUser(@RequestBody userDTO: UserDTO): ResponseEntity<UserDTO> {
-        val user = userService.registerUser(userDTO)
+    fun registerUser(@RequestBody userDTO: UserDTO): ResponseEntity<Any> {
+        try {
+            val user = userService.registerUser(userDTO)
         return ResponseEntity.ok(UserDTO(user.id, user.username, user.email, user.password, user.role))
+        }
+        catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+        }
     }
     data class LoginRequest(
         val email: String,

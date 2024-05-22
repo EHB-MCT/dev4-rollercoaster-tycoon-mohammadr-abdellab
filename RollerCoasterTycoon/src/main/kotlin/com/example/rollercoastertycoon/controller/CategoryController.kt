@@ -28,9 +28,14 @@ class CategoryController(private val categoryService: CategoryService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteCategory(@PathVariable id: Long): ResponseEntity<Void> {
-        categoryService.deleteCategory(id)
+    fun deleteCategory(@PathVariable id: Long): ResponseEntity<Any> {
+        try {
+            categoryService.deleteCategory(id)
         return ResponseEntity.noContent().build()
+       }
+        catch (e: Exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+        }
 
     }
 

@@ -16,6 +16,10 @@ class UserService(
     private val passwordEncoder: BCryptPasswordEncoder
 ) {
     fun registerUser(userDTO: UserDTO): User {
+        val existingUser = userRepository.findByEmail(userDTO.email)
+        if (existingUser != null) {
+            throw IllegalArgumentException("Email ${userDTO.email} is already in use")
+        }
         val hashedPassword = passwordEncoder.encode(userDTO.password)
         val user = User(
             username = userDTO.username,
