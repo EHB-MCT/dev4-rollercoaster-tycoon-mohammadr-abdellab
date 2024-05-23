@@ -38,10 +38,10 @@ const isAdmin = () => {
                 <RouterLink class="nav-link" exact to="/">Home</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink v-if="isAdmin()" class="nav-link" exact to="/Dashboard">Admin Dashboard</RouterLink>
+                <RouterLink v-if="isAdmin()" class="nav-link" exact to="/dashboard">Admin Dashboard</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" exact to="/Favorites">Favorites</RouterLink>
+                <RouterLink v-if="loggedInUser" class="nav-link" exact to="/favorites">Favorites</RouterLink>
               </li>
               <span style="color: white;" class="navbar-text ms-5" v-if="loggedInUser">Welcome, {{
                 loggedInUser.username

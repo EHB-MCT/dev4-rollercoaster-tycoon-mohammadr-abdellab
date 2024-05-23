@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <h1 class="text-center my-4">Attractions</h1>
     <div class="row">
-      <div class="col-md-1">
+      <div class="col-md-2">
         <div class="list-group">
           <a href="#" class="list-group-item list-group-item-action" :class="{ active: selectedCategory === null }"
             @click="filterByCategory(null)">All</a>
@@ -12,52 +12,52 @@
           </a>
         </div>
       </div>
-      <div class="col-md-3" v-for="attraction in filteredAttractions" :key="attraction.id">
-        <div class="card mb-3" style="width: 100%; height: 40pc;">
-          <img class="card-img-top" style="height: 15pc; object-fit: cover;" :src="attraction.image"
-            alt="Image of {{ attraction.name }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ attraction.name }}</h5>
-            <ul class="list-group">
-              <li class="list-group-item disabled">Category: {{ attraction.category.name }}</li>
-              <li class="list-group-item"> Year Built: {{ attraction.yearBuilt }}<br>
-              </li>
-              <li class="list-group-item"> Speed: {{ attraction.speed }} km/h<br>
-              </li>
-              <li class="list-group-item"> Height Requirement: {{ attraction.heightRequirement }}cm<br>
-              </li>
-              <li class="list-group-item"> Operational: {{ attraction.operational ? 'Yes' : 'No' }}<br>
-              </li>
-              <li class="list-group-item"> Maintenance Dates: {{ attraction.maintenanceDates.join(', ') }}
-                <br>
-              </li>
-            </ul>
-            <a :href="attraction.onRideVideo || '#'" class="btn btn-primary mt-2" target="_blank">Watch On-Ride
-              Video</a>
-            <br>
-            <button v-if="!favorites.some(fav => fav.id === attraction.id)" class="btn mt-2"
-              @click="addToFavorites(attraction)" style="border: none;">
-              <svg xmlns="http://www.w3.org/2000/svg" cursor="pointer" width="30" height="30" fill="red"
-                class="bi bi-heart" viewBox="0 0 16 16">
-                <path style=""
-                  d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
-              </svg>
-            </button>
-            <button v-else class="btn mt-2" @click="addToFavorites(attraction)" style="border: none;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-heart-fill"
-                viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
-              </svg>
-            </button>
+      <div class="col-md-9">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 mb-4" v-for="attraction in filteredAttractions" :key="attraction.id">
+            <div class="card h-100">
+              <img class="card-img-top" style="height: 15pc; object-fit: cover;" :src="attraction.image"
+                alt="Image of {{ attraction.name }}">
+              <div class="card-body">
+                <h5 class="card-title">{{ attraction.name }}</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item disabled">Category: {{ attraction.category.name }}</li>
+                  <li class="list-group-item">Year Built: {{ attraction.yearBuilt }}</li>
+                  <li class="list-group-item">Speed: {{ attraction.speed }} km/h</li>
+                  <li class="list-group-item">Height Requirement: {{ attraction.heightRequirement }} cm</li>
+                  <li class="list-group-item">Operational: {{ attraction.operational ? 'Yes' : 'No' }}</li>
+                  <li class="list-group-item">Maintenance Dates: {{ attraction.maintenanceDates.join(', ') }}</li>
+                </ul>
+                <a :href="attraction.onRideVideo || '#'" class="btn btn-primary mt-2" target="_blank">Watch On-Ride
+                  Video</a>
+                <button v-if="!favorites.some(fav => fav.id === attraction.id)" class="btn mt-2"
+                  @click="addToFavorites(attraction)" style="border: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" cursor="pointer" width="30" height="30" fill="red"
+                    class="bi bi-heart" viewBox="0 0 16 16">
+                    <path
+                      d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                  </svg>
+                </button>
+                <button v-else class="btn mt-2" @click="addToFavorites(attraction)" style="border: none;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-heart-fill"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="message" class="alert alert-info" role="alert">
+    <div v-if="message" class="alert alert-info fixed-bottom mx-auto" style="width: 90%; max-width: 600px;"
+      role="alert">
       {{ message }}
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -116,17 +116,18 @@ export default {
           // Ajouter l'attraction aux favoris
           await axios.post(`http://localhost:9000/users/${userId}/favorites/${attractionId}`);
           this.favorites.push(attraction);
-          alert(`${attraction.name} added to favorites!`);
           this.message = `${attraction.name} added to favorites!`;
 
         } else {
-          // Supprimer l'attraction des favoris si elle est déjà présente
+
           const existingFavoriteIndex = this.favorites.findIndex(fav => fav.id === attraction.id);
           await axios.delete(`http://localhost:9000/users/${userId}/favorites/${attractionId}`);
           this.favorites.splice(existingFavoriteIndex, 1);
-          alert(`${attraction.name} retiré des favoris!`);
           this.message = "Removed from favorite list!";
         }
+        setTimeout(() => {
+          this.message = "";
+        }, 2000);
       } catch (error) {
         console.error("Error toggling favorites:", error);
       }

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import home from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import DashboardView from '../views/DashboardView.vue'
 
 
 const router = createRouter({
@@ -21,9 +22,29 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: DashboardView,
+      meta: { requiresAdmin: true }
     }
   ]
 })
 
+router.beforeEach((to, from, next) => {
+  const isAdmin = checkAdminStatus();
+  if (to.matched.some(record => record.meta.requiresAdmin) && !isAdmin) {
+    next('/');
+  } else {
+    next();
+  }
+});
+
+function checkAdminStatus() {
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+  return loggedInUser && loggedInUser.role === 'admin';
+
+}
 
 export default router

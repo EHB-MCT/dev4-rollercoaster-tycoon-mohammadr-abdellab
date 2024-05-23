@@ -1,9 +1,7 @@
 <template>
   <div class="container d-flex justify-content-center mt-5" style="height: 100vh;">
     <div style="width: 500px;">
-      <h1 class="text-center mb-4">Attractions App</h1>
-      <h2 class="text-center mb-4">Login Page</h2>
-
+      <h1 class="text-center mb-4">Login</h1>
       <form @submit.prevent="submitForm">
         <div class="mb-3">
           <label for="inputEmail" class="form-label">Email address</label>
@@ -15,6 +13,10 @@
         </div>
         <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>
+      <div v-if="errorMessage" class="alert alert-danger mt-3 mx-auto" style="width: 90%; max-width: 600px;"
+        role="alert">
+        {{ errorMessage }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,6 +30,7 @@ export default {
     return {
       email: "",
       password: "",
+      errorMessage: ""
     };
   },
   methods: {
@@ -49,8 +52,8 @@ export default {
           window.location.href = "/";
         }
       } catch (error) {
-        console.error("Error logging in:", error.response.data);
-        alert(error.response.data.message)
+        console.error(error);
+        this.errorMessage = "Please try again later.";
       }
     },
   },
