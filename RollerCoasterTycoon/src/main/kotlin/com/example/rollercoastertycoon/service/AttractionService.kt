@@ -30,7 +30,9 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
             operational = attractionDTO.operational,
             maintenanceDates = attractionDTO.maintenanceDates,
             speed = attractionDTO.speed,
-            heightRequirement = attractionDTO.heightRequirement
+            heightRequirement = attractionDTO.heightRequirement,
+            breakdownCount = attractionDTO.breakdownCount,
+
         )
         return attractionRepository.save(attraction)
     }
@@ -51,6 +53,8 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
             attraction.maintenanceDates = attractionDTO.maintenanceDates
             attraction.speed = attractionDTO.speed
             attraction.heightRequirement = attractionDTO.heightRequirement
+            attraction.breakdownCount = attractionDTO.breakdownCount
+
             return attractionRepository.save(attraction)
         }
         return null

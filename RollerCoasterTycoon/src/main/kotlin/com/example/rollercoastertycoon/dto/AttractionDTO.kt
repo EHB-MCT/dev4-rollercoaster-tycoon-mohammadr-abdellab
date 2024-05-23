@@ -15,4 +15,5 @@ data class AttractionDTO(
     var maintenanceDates: List<String> = ArrayList(),
     var speed: Int,
     var heightRequirement: String?,
+    var breakdownCount: Int = 0
 )

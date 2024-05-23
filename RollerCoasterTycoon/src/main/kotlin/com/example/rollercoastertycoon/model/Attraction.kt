@@ -22,5 +22,7 @@ import jakarta.persistence.*
     @Column(name = "maintenance_date")
     var maintenanceDates: List<String> = ArrayList(),
     var speed: Int,
-    var heightRequirement: String?
- )
+    var heightRequirement: String?,
+    var breakdownCount: Int = 0
+
+)
