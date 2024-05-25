@@ -3,6 +3,8 @@ import home from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import EditAttraction from '../views/EditAttractionView.vue'
+
 
 
 const router = createRouter({
@@ -28,6 +30,12 @@ const router = createRouter({
       name: 'dashboard',
       component: DashboardView,
       meta: { requiresAdmin: true }
+    },
+    {
+      path: '/edit-attraction/:id',
+      name: 'EditAttraction',
+      component: EditAttraction,
+      props: true
     }
   ]
 })

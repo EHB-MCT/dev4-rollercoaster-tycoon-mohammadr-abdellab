@@ -38,6 +38,7 @@ class BreakdownService(
         )
 
         attraction.breakdownCount += 1
+        attraction.operational = false
         attractionRepository.save(attraction)
         return breakdownRepository.save(breakdown)
     }
@@ -68,6 +69,9 @@ class BreakdownService(
 
     fun deleteBreakdown(id: Long): Boolean {
         return if (breakdownRepository.existsById(id)) {
+            val breakdown = getBreakdownById(id)
+            val attraction = breakdown.attraction
+            attraction.breakdownCount -= 1
             breakdownRepository.deleteById(id)
             true
         } else {

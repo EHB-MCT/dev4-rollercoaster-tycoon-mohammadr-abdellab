@@ -1,7 +1,66 @@
 <template>
     <div class="container mt-5">
         <h1 class="mb-4">Admin Dashboard</h1>
-
+        <div class="card mb-4">
+            <div class="card-header">Attractions</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><strong>Name</strong></th>
+                            <th><strong>Category</strong></th>
+                            <th><strong>Capacity</strong></th>
+                            <th><strong>Year Built</strong></th>
+                            <th><strong>Image</strong></th>
+                            <th><strong>Video</strong></th>
+                            <th><strong>Actions</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="attraction in attractions" :key="attraction.id">
+                            <td>{{ attraction.name }}</td>
+                            <td>{{ attraction.category.name }}</td>
+                            <td>{{ attraction.capacity }}</td>
+                            <td>{{ attraction.yearBuilt }}</td>
+                            <td><img :src="attraction.image" alt="attraction image" class="img-thumbnail" width="100">
+                            </td>
+                            <td>
+                                <a :href="attraction.onRideVideo" class="btn btn-primary" target="_blank"
+                                    v-if="attraction.onRideVideo">Watch
+                                    Video</a>
+                                <span v-else>No Video Available</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger" @click="deleteAttraction(attraction.id)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header">Manage Breakdowns</div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="breakdown in breakdowns" :key="breakdown.id">
+                        <div>
+                            <h3>{{ breakdown.attraction.name }}</h3>
+                            <p><strong>Status:</strong> {{ breakdown.resolved ? 'Resolved' : 'Unresolved' }}</p>
+                            <p><strong>Date Reported:</strong> {{ breakdown.dateReported }}</p>
+                            <p v-if="breakdown.dateResolved"><strong>Date Resolved:</strong> {{ breakdown.dateResolved
+                                }}</p>
+                            <p><strong>Description:</strong> {{ breakdown.description }}</p>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-success btn-sm" @click="resolveBreakdown(breakdown.id)"
+                                :disabled="breakdown.resolved">Resolve</button>
+                            <button class="btn btn-danger btn-sm ms-2"
+                                @click="deleteBreakdown(breakdown.id)">Delete</button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="card mb-4">
             <div class="card-header">Add New Attraction</div>
             <div class="card-body">
@@ -45,44 +104,6 @@
         </div>
 
         <div class="card mb-4">
-            <div class="card-header">Attractions</div>
-            <div class="card-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Capacity</th>
-                            <th>Year Built</th>
-                            <th>Image</th>
-                            <th>Video</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="attraction in attractions" :key="attraction.id">
-                            <td>{{ attraction.name }}</td>
-                            <td>{{ attraction.category.name }}</td>
-                            <td>{{ attraction.capacity }}</td>
-                            <td>{{ attraction.yearBuilt }}</td>
-                            <td><img :src="attraction.image" alt="attraction image" class="img-thumbnail" width="100">
-                            </td>
-                            <td>
-                                <a :href="attraction.onRideVideo" class="btn btn-primary" target="_blank"
-                                    v-if="attraction.onRideVideo">Watch
-                                    Video</a>
-                                <span v-else>No Video Available</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger" @click="deleteAttraction(attraction.id)">Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card mb-4">
             <div class="card-header">Manage Categories</div>
             <div class="card-body">
                 <form @submit.prevent="addCategory">
@@ -104,43 +125,38 @@
         <h1 class="mb-4">Breakdown Registration</h1>
 
         <div class="card mb-4">
-            <div class="card-header">Report a Breakdown</div>
+            <div class="card-header">Register Breakdown</div>
             <div class="card-body">
-                <form @submit.prevent="reportBreakdown">
+                <form @submit.prevent="addBreakdown">
                     <div class="mb-3">
                         <label for="attraction" class="form-label">Attraction</label>
-                        <select class="form-select" v-model="selectedAttraction" required>
+                        <select class="form-select" id="attraction" v-model="newBreakdown.attractionId" required>
                             <option v-for="attraction in attractions" :key="attraction.id" :value="attraction.id">
-                                {{ attraction.name }}
-                            </option>
+                                {{ attraction.name }}</option>
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="dateReported" class="form-label">Date Reported</label>
+                        <input type="date" class="form-control" id="dateReported" v-model="newBreakdown.dateReported"
+                            required>
+                    </div>
+                    <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" v-model="description" rows="3"
+                        <textarea class="form-control" id="description" v-model="newBreakdown.description"
                             required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Report Breakdown</button>
+                    <button type="submit" class="btn btn-primary">Register Breakdown</button>
                 </form>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header">Manage Breakdowns</div>
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center"
-                        v-for="breakdown in breakdowns" :key="breakdown.id">
-                        {{ breakdown.attraction.name }} - {{ breakdown.status }}
-                        <button class="btn btn-success btn-sm" @click="resolveBreakdown(breakdown.id)">Resolve</button>
-                    </li>
-                </ul>
             </div>
         </div>
         <div v-if="message" class="alert alert-info fixed-bottom mx-auto" style="width: 90%; max-width: 600px;"
             role="alert">
             {{ message }}
         </div>
-
+        <div v-if="errorMessage" class="alert alert-danger fixed-bottom mx-auto" style="width: 90%; max-width: 600px;"
+            role="alert">
+            {{ errorMessage }}
+        </div>
     </div>
 </template>
 
@@ -163,10 +179,19 @@ export default {
                 heightRequirement: ''
             },
             newCategory: '',
+            newBreakdown: {
+                attractionId: '',
+                dateReported: '',
+                description: '',
+                resolved: false,
+                dateResolved: null
+            },
             attractions: [],
             categories: [],
             breakdowns: [],
-            message: ""
+            message: "",
+            errorMessage: ""
+
         };
     },
     methods: {
@@ -183,8 +208,13 @@ export default {
             this.categories = categoriesResponse.data;
 
         },
-        fetchBreakdowns() {
-            // Fetch the list of breakdowns from the backend
+        async fetchBreakdowns() {
+            try {
+                const response = await axios.get('http://localhost:9000/breakdowns');
+                this.breakdowns = response.data;
+            } catch (error) {
+                console.error('Error fetching breakdowns:', error);
+            }
         },
         async addAttraction() {
             try {
@@ -257,25 +287,62 @@ export default {
                     this.message = "";
                 }, 2000);
             } catch (error) {
-                alert('Failed to delete category. Please try again later.');
+                this.errorMessage = "Category cannot be deleted because it has associated attractions !";
+                setTimeout(() => {
+                    this.errorMessage = "";
+                }, 2000);
             }
         },
-        async reportBreakdown() {
+        async addBreakdown() {
             try {
+                const { attractionId, dateReported, description } = this.newBreakdown;
                 const breakdownData = {
-                    attractionId: this.selectedAttraction,
-                    description: this.description
+                    attractionId,
+                    dateReported,
+                    description,
+                    resolved: false,
+                    dateResolved: null
                 };
-                await axios.post("http://localhost:9000/breakdowns", breakdownData);
-                alert("Breakdown reported successfully!");
-
-
+                const { data } = await axios.post('http://localhost:9000/breakdowns', breakdownData);
+                this.breakdowns.push(data);
+                this.message = "Breakdown registered successfully!";
+                this.newBreakdown = {
+                    attractionId: '',
+                    dateReported: '',
+                    description: '',
+                    resolved: false,
+                    dateResolved: null
+                };
+                setTimeout(() => {
+                    this.message = "";
+                }, 2000);
             } catch (error) {
-                alert("Failed to report breakdown. Please try again later.");
+                alert('Failed to register breakdown. Please try again later.');
             }
         },
-        resolveBreakdown(id) {
-            // Resolve a breakdown by sending a PUT request to the backend
+        async resolveBreakdown(id) {
+            try {
+                await axios.put(`http://localhost:9000/breakdowns/resolve/${id}`);
+                this.fetchBreakdowns();
+                this.message = "Breakdown resolved successfully!";
+                setTimeout(() => {
+                    this.message = "";
+                }, 2000);
+            } catch (error) {
+                alert('Failed to resolve breakdown. Please try again later.');
+            }
+        },
+        async deleteBreakdown(id) {
+            try {
+                await axios.delete(`http://localhost:9000/breakdowns/${id}`);
+                this.breakdowns = this.breakdowns.filter(breakdown => breakdown.id !== id);
+                this.errorMessage = "Breakdown deleted successfully!";
+                setTimeout(() => {
+                    this.errorMessage = "";
+                }, 2000);
+            } catch (error) {
+                alert('Failed to delete breakdown. Please try again later.');
+            }
         }
     },
 

@@ -6,6 +6,7 @@ import com.example.rollercoastertycoon.service.BreakdownService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin
 @RestController
 @RequestMapping("/breakdowns")
 class BreakdownController(private val breakdownService: BreakdownService) {
