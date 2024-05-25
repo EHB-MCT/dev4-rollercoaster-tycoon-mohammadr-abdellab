@@ -4,6 +4,8 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import EditAttraction from '../views/EditAttractionView.vue'
+import FavoritesView from '../views/FavoritesView.vue'
+
 
 
 
@@ -36,7 +38,13 @@ const router = createRouter({
       name: 'EditAttraction',
       component: EditAttraction,
       props: true
-    }
+    },
+    {
+      path: '/favorites', 
+      name: 'favorites',
+      component: FavoritesView 
+    },
+    
   ]
 })
 
