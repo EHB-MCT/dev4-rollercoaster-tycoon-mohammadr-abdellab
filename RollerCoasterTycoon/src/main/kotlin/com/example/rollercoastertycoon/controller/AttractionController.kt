@@ -46,4 +46,17 @@ class AttractionController(private val attractionService: AttractionService) {
         return ResponseEntity.noContent().build()
     }
 
+    @PutMapping("/{id}/rate")
+    fun rateAttraction(@PathVariable id: Long, @RequestBody rating: Int): ResponseEntity<Attraction> {
+        val ratedAttraction = attractionService.rateAttraction(id, rating.toDouble())
+        return if (ratedAttraction != null) {
+            ResponseEntity(ratedAttraction, HttpStatus.OK)
+        } else {
+            ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+    }
+
+
+
+
 }

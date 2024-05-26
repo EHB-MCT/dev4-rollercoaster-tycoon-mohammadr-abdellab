@@ -23,6 +23,8 @@ import jakarta.persistence.*
     var maintenanceDates: List<String> = ArrayList(),
     var speed: Int,
     var heightRequirement: String?,
-    var breakdownCount: Int = 0
+    var breakdownCount: Int = 0,
+    @Column(nullable = false, columnDefinition = "DOUBLE default 0.0")
+    var rating: Double = 0.0
 
 )

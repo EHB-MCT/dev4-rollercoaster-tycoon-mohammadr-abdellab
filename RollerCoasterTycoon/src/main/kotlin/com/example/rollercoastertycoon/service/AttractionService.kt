@@ -68,4 +68,15 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
                 false
             }
     }
+
+    fun rateAttraction(id: Long, rating: Double): Attraction? {
+        val existingAttraction = attractionRepository.findById(id)
+        if (existingAttraction.isPresent) {
+            val attraction = existingAttraction.get()
+            attraction.rating = rating
+            return attractionRepository.save(attraction)
+        }
+        return null
+    }
+
 }
