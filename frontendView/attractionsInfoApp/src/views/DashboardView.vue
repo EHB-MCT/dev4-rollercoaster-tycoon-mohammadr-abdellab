@@ -149,6 +149,38 @@
                 </form>
             </div>
         </div>
+        <div class="card mb-4">
+            <div class="card-header">Manage Maintenance</div>
+            <div class="card-body">
+                <form @submit.prevent="addMaintenance">
+                    <div class="mb-3">
+                        <label for="attraction" class="form-label">Attraction</label>
+                        <select class="form-select" id="attraction" v-model="newMaintenance.attractionId" required>
+                            <option v-for="attraction in attractions" :key="attraction.id" :value="attraction.id">
+                                {{ attraction.name }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="maintenanceDate" class="form-label">Maintenance Date</label>
+                        <input type="date" class="form-control" id="maintenanceDate" v-model="newMaintenance.date"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Maintenance</button>
+                </form>
+
+                <div v-for="attraction in attractions" :key="attraction.id" class="mt-4">
+                    <h5>{{ attraction.name }} - Maintenance Dates</h5>
+                    <ul class="list-group">
+                        <li v-for="maintenance in attraction.maintenanceDates" :key="maintenance.id"
+                            class="list-group-item">
+                            {{ maintenance.date }}
+                            <button class="btn btn-danger btn-sm ms-2"
+                                @click="deleteMaintenance(attraction.id, maintenance.id)">Delete</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div v-if="message" class="alert alert-info fixed-bottom mx-auto" style="width: 90%; max-width: 600px;"
             role="alert">
             {{ message }}
@@ -185,6 +217,10 @@ export default {
                 description: '',
                 resolved: false,
                 dateResolved: null
+            },
+            newMaintenance: {
+                attractionId: '',
+                date: ''
             },
             attractions: [],
             categories: [],
@@ -342,6 +378,43 @@ export default {
                 }, 2000);
             } catch (error) {
                 alert('Failed to delete breakdown. Please try again later.');
+            }
+        },
+        async addMaintenance() {
+            try {
+                const { attractionId, date } = this.newMaintenance;
+                const maintenanceData = {
+                    attractionId,
+                    date
+                };
+                console.log(maintenanceData)
+                const { data } = await axios.post('http://localhost:9000/maintenance/add', maintenanceData);
+                const attraction = this.attractions.find(attraction => attraction.id === attractionId);
+                if (attraction) {
+                    attraction.maintenanceDates.push(data);
+                }
+                this.message = "Maintenance date added successfully!";
+                this.newMaintenance = { attractionId: '', date: '' };
+                setTimeout(() => {
+                    this.message = "";
+                }, 2000);
+            } catch (error) {
+                alert('Failed to add maintenance date. Please try again later.');
+            }
+        },
+        async deleteMaintenance(attractionId, maintenanceId) {
+            try {
+                await axios.delete(`http://localhost:9000/maintenance/delete/${maintenanceId}`);
+                const attraction = this.attractions.find(attraction => attraction.id === attractionId);
+                if (attraction) {
+                    attraction.maintenanceDates = attraction.maintenanceDates.filter(date => date.id !== maintenanceId);
+                }
+                this.message = "Maintenance date deleted successfully!";
+                setTimeout(() => {
+                    this.message = "";
+                }, 2000);
+            } catch (error) {
+                alert('Failed to delete maintenance date. Please try again later.');
             }
         }
     },

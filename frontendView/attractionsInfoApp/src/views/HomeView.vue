@@ -33,8 +33,10 @@
                   </li>
                   <li class="list-group-item"><strong>Operational:</strong> {{ attraction.operational ? 'Yes' : 'No' }}
                   </li>
-                  <li class="list-group-item"><strong>Maintenance Dates:</strong> {{
-                    attraction.maintenanceDates.join(' , ') }}</li>
+                  <div class="list-group-item">
+                    <strong>Next Maintenance Date:</strong> {{ getNextMaintenanceDate(attraction.maintenanceDates) }}
+                  </div>
+
                   <li class="list-group-item"><strong>number of breakdowns
                       :</strong> {{ attraction.breakdownCount }}
                   </li>
@@ -63,9 +65,7 @@
                   <i class="bi bi-pencil-square"> Edit</i>
                 </button>
                 <br>
-                <button @click="planMaintenance(attraction)" class="btn btn-warning mt-2">
-                  Plan Maintenance
-                </button>
+        
                 <br>
               </div>
             </div>
@@ -137,6 +137,7 @@ export default {
     try {
       const response = await axios.get("http://localhost:9000/attractions/all");
       this.attractions = response.data;
+      console.log(this.attractions)
       const categoriesResponse = await axios.get("http://localhost:9000/categories");
       this.categories = categoriesResponse.data;
 
@@ -196,6 +197,20 @@ export default {
     },
     editAttraction(attraction) {
       this.$router.push({ name: 'EditAttraction', params: { id: attraction.id } });
+    },
+    getNextMaintenanceDate(maintenanceDates) {
+      if (!maintenanceDates || maintenanceDates.length === 0) return "No maintenance planned";
+
+      const sortedDates = maintenanceDates.sort((a, b) => new Date(a.date) - new Date(b.date));
+      const today = new Date();
+
+      const nextDate = sortedDates.find(date => new Date(date.date) > today);
+
+      if (nextDate) {
+        return new Date(nextDate.date).toLocaleDateString("nl-NL");
+      } else {
+        return "No upcoming maintenance";
+      }
     },
   },
   mounted() {

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus
 @RequestMapping("/categories")
 class CategoryController(private val categoryService: CategoryService) {
 
-    @PostMapping
+    @PostMapping()
     fun createCategory(@RequestBody categoryDTO: CategoryDTO): ResponseEntity<CategoryDTO> {
         val createdCategory = categoryService.createCategory(categoryDTO)
         return ResponseEntity.ok(createdCategory)

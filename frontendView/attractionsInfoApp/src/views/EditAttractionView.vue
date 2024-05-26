@@ -37,11 +37,6 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="maintenanceDates">Maintenance Dates</label>
-                <input type="text" class="form-control" id="maintenanceDates" v-model="maintenanceDatesString" required>
-                <small class="form-text text-muted">Enter dates separated by commas.</small>
-            </div>
-            <div class="form-group">
                 <label for="speed">Speed (km/h)</label>
                 <input type="number" class="form-control" id="speed" v-model="attraction.speed" required>
             </div>
@@ -74,7 +69,6 @@ export default {
                 image: "",
                 onRideVideo: "",
                 operational: true,
-                maintenanceDates: [],
                 speed: 0,
                 heightRequirement: 0,
                 breakdownCount: null,
@@ -92,8 +86,6 @@ export default {
             this.attraction = response.data;
             this.selectedCategory = this.attraction.category.name;
 
-            this.maintenanceDatesString = this.attraction.maintenanceDates.join(", ");
-
             const categoriesResponse = await axios.get("http://localhost:9000/categories");
             this.categories = categoriesResponse.data;
 
@@ -107,7 +99,7 @@ export default {
 
             const updatedAttraction = {
                 ...this.attraction,
-                maintenanceDates: this.maintenanceDatesString.split(",").map(date => date.trim())
+                maintenanceDates: []
             };
             try {
                 await axios.put(`http://localhost:9000/attractions/${this.attraction.id}`, updatedAttraction);

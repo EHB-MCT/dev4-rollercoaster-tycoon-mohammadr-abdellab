@@ -26,18 +26,6 @@ class MaintenanceService(
         return maintenanceRepository.save(maintenance)
     }
 
-    fun updateMaintenance(id: Long, maintenanceDTO: MaintenanceDTO): Maintenance? {
-        val existingMaintenance = maintenanceRepository.findById(id)
-        return if (existingMaintenance.isPresent) {
-            val updatedMaintenance = existingMaintenance.get().copy(
-                attractionId = maintenanceDTO.attractionId,
-                date = maintenanceDTO.date
-            )
-            maintenanceRepository.save(updatedMaintenance)
-        } else {
-            null
-        }
-    }
 
     fun deleteMaintenance(id: Long): Boolean {
         return if (maintenanceRepository.existsById(id)) {

@@ -35,7 +35,7 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
             heightRequirement = attractionDTO.heightRequirement,
             breakdownCount = attractionDTO.breakdownCount,
 
-        )
+            )
         return attractionRepository.save(attraction)
     }
 
@@ -52,7 +52,6 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
             attraction.image = attractionDTO.image
             attraction.onRideVideo = attractionDTO.onRideVideo
             attraction.operational = attractionDTO.operational
-            attraction.maintenanceDates = emptyList()
             attraction.speed = attractionDTO.speed
             attraction.heightRequirement = attractionDTO.heightRequirement
             attraction.breakdownCount = attractionDTO.breakdownCount
@@ -63,11 +62,11 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
     }
 
     fun deleteAttraction(id: Long): Boolean {
-            return if (attractionRepository.existsById(id)) {
-                attractionRepository.deleteById(id)
-                true
-            } else {
-                false
-            }
+        return if (attractionRepository.existsById(id)) {
+            attractionRepository.deleteById(id)
+            true
+        } else {
+            false
+        }
     }
 }

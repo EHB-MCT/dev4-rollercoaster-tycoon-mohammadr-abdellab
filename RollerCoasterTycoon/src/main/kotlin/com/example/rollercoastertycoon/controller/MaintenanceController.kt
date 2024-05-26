@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+
+@CrossOrigin
 @RestController
 @RequestMapping("/maintenance")
 class MaintenanceController(
@@ -33,15 +35,6 @@ class MaintenanceController(
         return ResponseEntity(maintenance, HttpStatus.CREATED)
     }
 
-    @PutMapping("/update/{id}")
-    fun updateMaintenance(@PathVariable id: Long, @RequestBody maintenanceDTO: MaintenanceDTO): ResponseEntity<Maintenance> {
-        val updatedMaintenance = maintenanceService.updateMaintenance(id, maintenanceDTO)
-        return if (updatedMaintenance != null) {
-            ResponseEntity(updatedMaintenance, HttpStatus.OK)
-        } else {
-            ResponseEntity(HttpStatus.NOT_FOUND)
-        }
-    }
 
     @DeleteMapping("/delete/{id}")
     fun deleteMaintenance(@PathVariable id: Long): ResponseEntity<Any> {
