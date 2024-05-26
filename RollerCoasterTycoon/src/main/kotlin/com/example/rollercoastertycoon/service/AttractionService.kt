@@ -2,12 +2,14 @@ package com.example.rollercoastertycoon.service
 import com.example.rollercoastertycoon.repositories.AttractionRepository
 import com.example.rollercoastertycoon.dto.AttractionDTO
 import com.example.rollercoastertycoon.model.Attraction
-import com.example.rollercoastertycoon.model.Category
 import com.example.rollercoastertycoon.repositories.CategoryRepository
+import com.example.rollercoastertycoon.repositories.MaintenanceRepository
+
 import org.springframework.stereotype.Service
 
 @Service
-class AttractionService(private val attractionRepository: AttractionRepository, private val categoryRepository: CategoryRepository) {
+class AttractionService(private val attractionRepository: AttractionRepository, private val categoryRepository: CategoryRepository
+) {
 
     fun getAllAttractions(): List<Attraction> {
         return attractionRepository.findAll()
@@ -28,7 +30,7 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
             image = attractionDTO.image,
             onRideVideo = attractionDTO.onRideVideo,
             operational = attractionDTO.operational,
-            maintenanceDates = attractionDTO.maintenanceDates,
+            maintenanceDates = emptyList(),
             speed = attractionDTO.speed,
             heightRequirement = attractionDTO.heightRequirement,
             breakdownCount = attractionDTO.breakdownCount,
@@ -50,7 +52,7 @@ class AttractionService(private val attractionRepository: AttractionRepository, 
             attraction.image = attractionDTO.image
             attraction.onRideVideo = attractionDTO.onRideVideo
             attraction.operational = attractionDTO.operational
-            attraction.maintenanceDates = attractionDTO.maintenanceDates
+            attraction.maintenanceDates = emptyList()
             attraction.speed = attractionDTO.speed
             attraction.heightRequirement = attractionDTO.heightRequirement
             attraction.breakdownCount = attractionDTO.breakdownCount

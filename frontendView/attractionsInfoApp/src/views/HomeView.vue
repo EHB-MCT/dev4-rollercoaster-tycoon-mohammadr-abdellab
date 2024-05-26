@@ -62,6 +62,11 @@
                 <button v-if="isAdmin" @click="editAttraction(attraction)" class="btn btn-warning mt-2">
                   <i class="bi bi-pencil-square"> Edit</i>
                 </button>
+                <br>
+                <button @click="planMaintenance(attraction)" class="btn btn-warning mt-2">
+                  Plan Maintenance
+                </button>
+                <br>
               </div>
             </div>
           </div>
@@ -194,6 +199,10 @@ export default {
     },
   },
   mounted() {
+    if (this.attractions.length > 0) {
+      this.fetchMaintenanceDate(this.attractions[0].id);
+    }
+
     this.getFavorites();
     loggedInUser.value = JSON.parse(localStorage.getItem('loggedInUser'));
 

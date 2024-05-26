@@ -1,7 +1,7 @@
 package com.example.rollercoastertycoon.dto
 
-import com.example.rollercoastertycoon.config.CategoryDeserializer
-import com.example.rollercoastertycoon.model.Category
+import com.example.rollercoastertycoon.model.Maintenance
+import java.time.LocalDate
 
 data class AttractionDTO(
     var id: Long = 0,
@@ -12,7 +12,7 @@ data class AttractionDTO(
     var image: String,
     var onRideVideo: String?,
     var operational: Boolean,
-    var maintenanceDates: List<String> = ArrayList(),
+    var maintenanceDates: List<LocalDate>? = null,
     var speed: Int,
     var heightRequirement: String?,
     var breakdownCount: Int = 0
