@@ -54,8 +54,8 @@ export default {
                 );
 
                 if (response.status === 200) {
-                    localStorage.setItem('loggedInUser', JSON.stringify(response.data.user));
-                    this.$router.push('/home');
+                    localStorage.setItem('loggedInUser', JSON.stringify(response.data));
+                    window.location.href = "/";
                 }
             } catch (error) {
                 this.errorMessage = "Email is already in use";
